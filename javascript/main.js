@@ -1,6 +1,5 @@
 var THREE = require('three');
 var Grid = require('./grid');
-var GridCubeRenderer = require('./gridCubeRenderer');
 var GridSelectables = require('./gridSelectables');
 
 //renderer
@@ -47,7 +46,7 @@ var heightPropertyName = 'height';
 grid.addGridProperty(heightPropertyName);
 grid.setGridPropertyValue(heightPropertyName, grid.getCell(7, 3), 4);
 
-GridCubeRenderer.renderGrid(grid, 50, 30, scene);
+Grid3DScene.renderGrid(grid, 50, 30, scene);
 
 function render() {
     trace();

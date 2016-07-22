@@ -1,5 +1,6 @@
 var THREE = require('three');
 var Grid = require('./grid');
+var Grid3DScene = require('./grid3DScene');
 var GridSelectables = require('./gridSelectables');
 
 //renderer

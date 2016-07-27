@@ -15,7 +15,7 @@ document.body.appendChild(renderer.domElement);
 //camera
 var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 camera.position.x = 0;
-camera.position.y = 250;
+camera.position.y = 550;
 camera.position.z = 0;
 camera.lookAt(new THREE.Vector3(500, 0, 500));
 
@@ -80,8 +80,10 @@ for (var i = 0; i < 5; ++i){
     gameEntityCollection[i].selectionShape = singleSelectionManager.makeAndRegisterSelectableCylinder(20,60, gameEntityCollection[i]);
 }
 
-Grid3DScene.setGridScenePosition(grid.getCell(5,5), grid, gameEntityCollection[0].selectionShape.position, 50, 30);
-Grid3DScene.setGridScenePosition(grid.getCell(7,5), grid, gameEntityCollection[1].selectionShape.position, 50, 30);
+Grid3DScene.setGridScenePosition(grid.getCell(5,5), grid, gameEntityCollection[0].selectionShape.position, 50, 30, 30);
+Grid3DScene.setGridScenePosition(grid.getCell(7,5), grid, gameEntityCollection[1].selectionShape.position, 50, 30, 30);
+Grid3DScene.setGridScenePosition(grid.getCell(5,3), grid, gameEntityCollection[2].selectionShape.position, 50, 30, 30);
+Grid3DScene.setGridScenePosition(grid.getCell(7,3), grid, gameEntityCollection[3].selectionShape.position, 50, 30, 30);
 
 singleSelectionManager.onSelect(onSelect);
 

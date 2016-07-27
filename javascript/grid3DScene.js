@@ -1,7 +1,7 @@
 var THREE = require('three');
 
 var Grid3DScene = {
-    renderGrid: function(grid, cubeSize, heightFactor, scene) {
+    renderGrid: function(grid, cubeSize, heightFactor, scene) { //TODO: Cache values touse in position dispatch?
         var cubeGeometry = new THREE.CubeGeometry(cubeSize, heightFactor, cubeSize);
         var cubeMaterial = new THREE.MeshLambertMaterial({
             color: 0x1ec876
@@ -29,9 +29,9 @@ var Grid3DScene = {
         }
     },
 
-    setGridScenePosition: function(cell, inGrid, positionToSet, squareSize, squareHeight) {
+    setGridScenePosition: function(cell, inGrid, positionToSet, squareSize, squareHeight, additionalHeightOffset) {
         positionToSet.x = inGrid.getCellX(cell) * squareSize;
-        positionToSet.y = squareHeight * 0.5;
+        positionToSet.y = squareHeight * 0.5 + additionalHeightOffset;
         positionToSet.z = inGrid.getCellY(cell) * squareSize;
         if (inGrid.hasGridProperty('height')) {
             positionToSet.y += squareHeight * inGrid.getGridPropertyValue('height', cell);

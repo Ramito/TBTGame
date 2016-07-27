@@ -1,24 +1,20 @@
 var THREE = require('three');
 var EventEmitter = require('events');
 
-var GridSelectables = {
-    makeSingleSelectionHandler: function(forGrid, gridCellSize, selectableRadius, selectableHeight) {
+var Selectables = {
+    makeSingleSelectionHandler: function() {
         var singleSelectionManager = {};
 
         var registeredSelectables = [];
 
         var selectionEventEmitter = new EventEmitter.EventEmitter();
 
-        singleSelectionManager.makeSelectable = function(gridX, gridY) { //TODO: Do not take position here
-            var cylinderGeometry = new THREE.CylinderGeometry(selectableRadius, selectableRadius, selectableHeight);
+        singleSelectionManager.makeAndRegisterSelectableCylinder = function(radius, height, eventPayload) {
+            var cylinderGeometry = new THREE.CylinderGeometry(radius, radius, height);
             var cylinderMaterial = new THREE.MeshLambertMaterial({
                 color: 0xee0808
             });
             var cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
-
-            cylinder.position.x = gridX * gridCellSize;
-            cylinder.position.y = selectableHeight * 0.5;
-            cylinder.position.z = gridY * gridCellSize;
 
             cylinder.isSelected = function() {
                 return (cylinder === currentSelected);
@@ -28,24 +24,24 @@ var GridSelectables = {
                 if (!cylinder.isSelected()) {
                     cylinder.material.color.set(0x0000ff);
                 }
-                selectionEventEmitter.emit('hoverenter', cylinder);
+                selectionEventEmitter.emit('hoverenter', cylinder, eventPayload);
             };
 
             cylinder.hoverExit = function() {
                 if (!cylinder.isSelected()) {
                     cylinder.material.color.set(0xee0808);
                 }
-                selectionEventEmitter.emit('hoverexit', cylinder);
+                selectionEventEmitter.emit('hoverexit', cylinder, eventPayload);
             };
 
             cylinder.select = function() {
                 cylinder.material.color.set(0xffffff);
-                selectionEventEmitter.emit('select', cylinder);
+                selectionEventEmitter.emit('select', cylinder, eventPayload);
             };
 
             cylinder.deselect = function() {
                 cylinder.material.color.set(0xee0808);
-                selectionEventEmitter.emit('deselect', cylinder);
+                selectionEventEmitter.emit('deselect', cylinder, eventPayload);
             };
 
             registeredSelectables.push(cylinder);
@@ -80,7 +76,7 @@ var GridSelectables = {
         }
 
         var raycaster = new THREE.Raycaster();
-        singleSelectionManager.tick = function(camera) { //TODO: No need to tick, take camera on constructor, run this on move
+        singleSelectionManager.tick = function(camera) {
             raycaster.setFromCamera(mousePosition, camera);
             var results = raycaster.intersectObjects(registeredSelectables);
             if (results.length > 0) {
@@ -125,7 +121,7 @@ var GridSelectables = {
                 currentMouseDown = null;
             }
         }
-
+        
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mousedown", onMouseDown);
         window.addEventListener("mouseup", onMouseUp);
@@ -134,4 +130,4 @@ var GridSelectables = {
     }
 };
 
-module.exports = GridSelectables;
+module.exports = Selectables;

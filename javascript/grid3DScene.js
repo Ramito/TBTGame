@@ -28,6 +28,15 @@ var Grid3DScene = {
             }
         }
     },
+
+    setGridScenePosition: function(cell, inGrid, positionToSet, squareSize, squareHeight) {
+        positionToSet.x = inGrid.getCellX(cell) * squareSize;
+        positionToSet.y = squareHeight * 0.5;
+        positionToSet.z = inGrid.getCellY(cell) * squareSize;
+        if (inGrid.hasGridProperty('height')) {
+            positionToSet.y += squareHeight * inGrid.getGridPropertyValue('height', cell);
+        }
+    }
 };
 
 module.exports = Grid3DScene;

@@ -1,7 +1,7 @@
 var THREE = require('three');
 var Grid = require('./grid');
 var Grid3DScene = require('./grid3DScene');
-var GridSelectables = require('./gridSelectables');
+var Selectables = require('./selectables');
 
 //renderer
 var width = window.innerWidth;
@@ -15,7 +15,7 @@ document.body.appendChild(renderer.domElement);
 //camera
 var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 camera.position.x = 0;
-camera.position.y = 100;
+camera.position.y = 250;
 camera.position.z = 0;
 camera.lookAt(new THREE.Vector3(500, 0, 500));
 
@@ -55,27 +55,46 @@ function render() {
     requestAnimationFrame(render);
 }
 
-var singleSelectionManager = GridSelectables.makeSingleSelectionHandler(grid, 50, 20, 60);
-scene.add(singleSelectionManager.makeSelectable(1, 1));
-scene.add(singleSelectionManager.makeSelectable(1, 12));
-scene.add(singleSelectionManager.makeSelectable(4, 7));
-scene.add(singleSelectionManager.makeSelectable(7, 2));
-scene.add(singleSelectionManager.makeSelectable(2, 8));
+function makeGameEntityFactory() {
+    var id = 0;
+    var factory = {
+        makeGameEntity : function () {
+            var gameEntity = { id : id };
+            ++id;
+            return gameEntity;
+        }
+    };
+    return factory;
+}
+
+var entityFactory = makeGameEntityFactory();
+var gameEntityCollection = [];
+
+for (var i = 0; i < 5; ++i){
+    gameEntityCollection[i] = entityFactory.makeGameEntity();
+}
+
+
+var singleSelectionManager = Selectables.makeSingleSelectionHandler();
+for (var i = 0; i < 5; ++i){
+    gameEntityCollection[i].selectionShape = singleSelectionManager.makeAndRegisterSelectableCylinder(20,60, gameEntityCollection[i]);
+}
+
+Grid3DScene.setGridScenePosition(grid.getCell(5,5), grid, gameEntityCollection[0].selectionShape.position, 50, 30);
+Grid3DScene.setGridScenePosition(grid.getCell(7,5), grid, gameEntityCollection[1].selectionShape.position, 50, 30);
+
+singleSelectionManager.onSelect(onSelect);
+
+function onSelect(event, selectedObject) {
+    console.log("HI " + selectedObject.id);
+}
+
+for (var i = 0; i < 5; ++i){
+    scene.add(gameEntityCollection[i].selectionShape);
+}
 
 function trace() {
     singleSelectionManager.tick(camera);
 }
-
-
-var mouse = new THREE.Vector2();
-
-function onMouseMove(event) {
-    // calculate mouse position in normalized device coordinates
-    // (-1 to +1) for both components
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-window.addEventListener('mousemove', onMouseMove, false);
 
 render();

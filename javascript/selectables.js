@@ -121,6 +121,22 @@ var Selectables = {
                 currentMouseDown = null;
             }
         }
+
+        singleSelectionManager.onHoverEnter = function(hoverEnterHandler) {
+            selectionEventEmitter.addListener('hoverenter', hoverEnterHandler);
+        };
+        
+        singleSelectionManager.onHoverExit = function(hoverExitHandler) {
+            selectionEventEmitter.addListener('hoverexit', hoverExitHandler);
+        };
+        
+        singleSelectionManager.onSelect = function(selectHandler) {
+            selectionEventEmitter.addListener('select', selectHandler);
+        };
+        
+        singleSelectionManager.onDeselect = function(deselectHandler) {
+            selectionEventEmitter.addListener('deselect', deselectHandler);
+        };
         
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mousedown", onMouseDown);

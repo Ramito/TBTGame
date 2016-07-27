@@ -1,1 +1,1 @@
-beefy javascript\tbtgame.js -- javascript\main.js -o -d javascript\tbtgame.js
+beefy javascript\tbtgame.js -- javascript\main.js -o javascript\tbtgame.js --debug

@@ -125,19 +125,35 @@ var Selectables = {
         singleSelectionManager.onHoverEnter = function(hoverEnterHandler) {
             selectionEventEmitter.addListener('hoverenter', hoverEnterHandler);
         };
-        
+
         singleSelectionManager.onHoverExit = function(hoverExitHandler) {
             selectionEventEmitter.addListener('hoverexit', hoverExitHandler);
         };
-        
+
         singleSelectionManager.onSelect = function(selectHandler) {
             selectionEventEmitter.addListener('select', selectHandler);
         };
-        
+
         singleSelectionManager.onDeselect = function(deselectHandler) {
             selectionEventEmitter.addListener('deselect', deselectHandler);
         };
-        
+
+        singleSelectionManager.removeOnHoverEnter = function(hoverEnterHandler) {
+            selectionEventEmitter.removeListener('hoverenter', hoverEnterHandler);
+        };
+
+        singleSelectionManager.removeOnHoverExit = function(hoverExitHandler) {
+            selectionEventEmitter.removeListener('hoverexit', hoverExitHandler);
+        };
+
+        singleSelectionManager.removeOnSelect = function(selectHandler) {
+            selectionEventEmitter.removeListener('select', selectHandler);
+        };
+
+        singleSelectionManager.removeOnDeselect = function(deselectHandler) {
+            selectionEventEmitter.removeListener('deselect', deselectHandler);
+        };
+
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mousedown", onMouseDown);
         window.addEventListener("mouseup", onMouseUp);

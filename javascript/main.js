@@ -47,8 +47,6 @@ var heightPropertyName = 'height';
 grid.addGridProperty(heightPropertyName);
 grid.setGridPropertyValue(heightPropertyName, grid.getCell(7, 3), 4);
 
-Grid3DScene.renderGrid(grid, 50, 30, scene);
-
 function render() {
     trace();
     renderer.render(scene, camera);
@@ -58,8 +56,10 @@ function render() {
 function makeGameEntityFactory() {
     var id = 0;
     var factory = {
-        makeGameEntity : function () {
-            var gameEntity = { id : id };
+        makeGameEntity: function() {
+            var gameEntity = {
+                id: id
+            };
             ++id;
             return gameEntity;
         }
@@ -70,20 +70,25 @@ function makeGameEntityFactory() {
 var entityFactory = makeGameEntityFactory();
 var gameEntityCollection = [];
 
-for (var i = 0; i < 5; ++i){
+for (var i = 0; i < 5; ++i) {
     gameEntityCollection[i] = entityFactory.makeGameEntity();
 }
 
 
 var singleSelectionManager = Selectables.makeSingleSelectionHandler();
-for (var i = 0; i < 5; ++i){
-    gameEntityCollection[i].selectionShape = singleSelectionManager.makeAndRegisterSelectableCylinder(20,60, gameEntityCollection[i]);
+for (var i = 0; i < 5; ++i) {
+    gameEntityCollection[i].selectionShape = singleSelectionManager.makeAndRegisterSelectableCylinder(20, 60, gameEntityCollection[i]);
 }
 
-Grid3DScene.setGridScenePosition(grid.getCell(5,5), grid, gameEntityCollection[0].selectionShape.position, 50, 30, 30);
-Grid3DScene.setGridScenePosition(grid.getCell(7,5), grid, gameEntityCollection[1].selectionShape.position, 50, 30, 30);
-Grid3DScene.setGridScenePosition(grid.getCell(5,3), grid, gameEntityCollection[2].selectionShape.position, 50, 30, 30);
-Grid3DScene.setGridScenePosition(grid.getCell(7,3), grid, gameEntityCollection[3].selectionShape.position, 50, 30, 30);
+var gridScene = Grid3DScene.create(grid, 50, 30);
+
+gridScene.render(scene);
+
+gridScene.setPositionInScene(grid.getCell(5, 5), gameEntityCollection[0].selectionShape.position, 30);
+gridScene.setPositionInScene(grid.getCell(7, 5), gameEntityCollection[1].selectionShape.position, 30);
+gridScene.setPositionInScene(grid.getCell(5, 3), gameEntityCollection[2].selectionShape.position, 30);
+gridScene.setPositionInScene(grid.getCell(7, 3), gameEntityCollection[3].selectionShape.position, 30);
+gridScene.setPositionInScene(grid.getCell(7, 7), gameEntityCollection[4].selectionShape.position, 30);
 
 singleSelectionManager.onSelect(onSelect);
 
@@ -91,7 +96,7 @@ function onSelect(event, selectedObject) {
     console.log("HI " + selectedObject.id);
 }
 
-for (var i = 0; i < 5; ++i){
+for (var i = 0; i < 5; ++i) {
     scene.add(gameEntityCollection[i].selectionShape);
 }
 

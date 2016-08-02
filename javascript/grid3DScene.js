@@ -1,8 +1,11 @@
 var THREE = require('three');
+var Selectables = require('./selectables');
 
 var Grid3DScene = {
     create: function(grid, gridSize, heightFactor) {
         var scene = {};
+
+        var gridSelectionManager = Selectables.makeSingleSelectionHandler();
 
         scene.render = function(renderScene) {
             var cubeGeometry = new THREE.CubeGeometry(gridSize, heightFactor, gridSize);
@@ -20,6 +23,12 @@ var Grid3DScene = {
                 cube.position.y = 0;
                 cube.position.z = grid.getCellY(cell) * gridSize;
                 renderScene.add(cube);
+                //Register for mouse selection events!
+                gridSelectionManager.registerSelectable(cube, {
+                    cell: cell,
+                    height: 0
+                });
+
                 if (gridHasHeight) {
                     for (var height = 1; height <= grid.getGridPropertyValue(heightPropertyName, cell); ++height) {
                         cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
@@ -27,10 +36,25 @@ var Grid3DScene = {
                         cube.position.y = height * heightFactor;
                         cube.position.z = grid.getCellY(cell) * gridSize;
                         renderScene.add(cube);
+                        //Register for mouse selection events!
+                        gridSelectionManager.registerSelectable(cube, {
+                            cell: cell,
+                            height: height
+                        });
                     }
                 }
             }
         };
+
+        gridSelectionManager.onHoverEnter(onHover);
+
+        scene.tickGridSelection = function(camera) {
+            gridSelectionManager.tick(camera);
+        };
+
+        function onHover(event, payload) {
+            console.log(payload.cell);
+        }
 
         scene.getPositionInScene = function(cell) {
             var position = {

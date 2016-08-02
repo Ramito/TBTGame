@@ -90,11 +90,35 @@ gridScene.setPositionInScene(grid.getCell(5, 3), gameEntityCollection[2].selecti
 gridScene.setPositionInScene(grid.getCell(7, 3), gameEntityCollection[3].selectionShape.position, 30);
 gridScene.setPositionInScene(grid.getCell(7, 7), gameEntityCollection[4].selectionShape.position, 30);
 
-singleSelectionManager.onSelect(onSelect);
-
 function onSelect(event, selectedObject) {
+    var selectionShape = selectedObject.selectionShape;
+    selectionShape.material.color.set(0xffffff);
     console.log("HI " + selectedObject.id);
 }
+
+function onDeselect(event, selectedObject) {
+    var selectionShape = selectedObject.selectionShape;
+    selectionShape.material.color.set(0xee0808);
+}
+
+function onHover(event, selectedObject) {
+    var selectionShape = selectedObject.selectionShape;
+    if (!selectionShape.isSelected()) {
+        selectionShape.material.color.set(0x0000ff);
+    }
+}
+
+function onHoverExit(event, selectedObject) {
+    var selectionShape = selectedObject.selectionShape;
+    if (!selectionShape.isSelected()) {
+        selectionShape.material.color.set(0xee0808);
+    }
+}
+
+singleSelectionManager.onSelect(onSelect);
+singleSelectionManager.onDeselect(onDeselect);
+singleSelectionManager.onHoverEnter(onHover);
+singleSelectionManager.onHoverExit(onHoverExit);
 
 for (var i = 0; i < 5; ++i) {
     scene.add(gameEntityCollection[i].selectionShape);
@@ -102,6 +126,7 @@ for (var i = 0; i < 5; ++i) {
 
 function trace() {
     singleSelectionManager.tick(camera);
+    gridScene.tickGridSelection(camera);
 }
 
 render();

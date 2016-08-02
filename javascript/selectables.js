@@ -16,37 +16,33 @@ var Selectables = {
             });
             var cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 
-            cylinder.isSelected = function() {
-                return (cylinder === currentSelected);
-            };
-
-            cylinder.hoverEnter = function() {
-                if (!cylinder.isSelected()) {
-                    cylinder.material.color.set(0x0000ff);
-                }
-                selectionEventEmitter.emit('hoverenter', cylinder, eventPayload);
-            };
-
-            cylinder.hoverExit = function() {
-                if (!cylinder.isSelected()) {
-                    cylinder.material.color.set(0xee0808);
-                }
-                selectionEventEmitter.emit('hoverexit', cylinder, eventPayload);
-            };
-
-            cylinder.select = function() {
-                cylinder.material.color.set(0xffffff);
-                selectionEventEmitter.emit('select', cylinder, eventPayload);
-            };
-
-            cylinder.deselect = function() {
-                cylinder.material.color.set(0xee0808);
-                selectionEventEmitter.emit('deselect', cylinder, eventPayload);
-            };
-
-            registeredSelectables.push(cylinder);
+            singleSelectionManager.registerSelectable(cylinder, eventPayload);
 
             return cylinder;
+        };
+
+        singleSelectionManager.registerSelectable = function(newSelectableShape, eventPayload) {
+            newSelectableShape.isSelected = function() {
+                return (newSelectableShape === currentSelected);
+            };
+
+            newSelectableShape.hoverEnter = function() {
+                selectionEventEmitter.emit('hoverenter', newSelectableShape, eventPayload);
+            };
+
+            newSelectableShape.hoverExit = function() {
+                selectionEventEmitter.emit('hoverexit', newSelectableShape, eventPayload);
+            };
+
+            newSelectableShape.select = function() {
+                selectionEventEmitter.emit('select', newSelectableShape, eventPayload);
+            };
+
+            newSelectableShape.deselect = function() {
+                selectionEventEmitter.emit('deselect', newSelectableShape, eventPayload);
+            };
+
+            registeredSelectables.push(newSelectableShape);
         };
 
         singleSelectionManager.clearAllSelectables = function() {

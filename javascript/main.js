@@ -102,6 +102,7 @@ function onDeselect(event, selectedObject) {
 }
 
 function onHover(event, selectedObject) {
+    selectionCylinderHovered = true;
     var selectionShape = selectedObject.selectionShape;
     if (!selectionShape.isSelected()) {
         selectionShape.material.color.set(0x0000ff);
@@ -109,11 +110,14 @@ function onHover(event, selectedObject) {
 }
 
 function onHoverExit(event, selectedObject) {
+    selectionCylinderHovered = false;
     var selectionShape = selectedObject.selectionShape;
     if (!selectionShape.isSelected()) {
         selectionShape.material.color.set(0xee0808);
     }
 }
+
+var selectionCylinderHovered = false;
 
 singleSelectionManager.onSelect(onSelect);
 singleSelectionManager.onDeselect(onDeselect);
@@ -126,7 +130,9 @@ for (var i = 0; i < 5; ++i) {
 
 function trace() {
     singleSelectionManager.tick(camera);
-    gridScene.tickGridSelection(camera);
+    if (!selectionCylinderHovered) {
+        gridScene.tickGridSelection(camera);
+    }
 }
 
 render();

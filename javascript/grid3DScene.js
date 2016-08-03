@@ -7,6 +7,19 @@ var Grid3DScene = {
 
         var gridSelectionManager = Selectables.makeSingleSelectionHandler();
 
+        var selector; //TODO: Move outside this module?
+
+        function makeSelectionIndicator(gridSize) {
+            var geometry = new THREE.CubeGeometry(gridSize, 0.5, gridSize);
+            var material = new THREE.MeshLambertMaterial({
+                color: 0xeeeeee,
+                transparent: true,
+                opacity: 0.25
+            }); //, side: THREE.DoubleSide});
+            var selector = new THREE.Mesh(geometry, material);
+            return selector;
+        }
+
         scene.render = function(renderScene) {
             var cubeGeometry = new THREE.CubeGeometry(gridSize, heightFactor, gridSize);
             var cubeMaterial = new THREE.MeshLambertMaterial({
@@ -44,6 +57,8 @@ var Grid3DScene = {
                     }
                 }
             }
+            selector = makeSelectionIndicator(gridSize);
+            renderScene.add(selector);
         };
 
         gridSelectionManager.onHoverEnter(onHover);
@@ -52,8 +67,13 @@ var Grid3DScene = {
             gridSelectionManager.tick(camera);
         };
 
+        scene.onGridClick = function(handler) {
+            gridSelectionManager.onClick(handler);
+        };
+
         function onHover(event, payload) {
-            console.log(payload.cell);
+            var cell = payload.cell;
+            scene.setPositionInScene(cell, selector.position, 2);
         }
 
         scene.getPositionInScene = function(cell) {

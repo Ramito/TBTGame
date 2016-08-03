@@ -34,6 +34,10 @@ var Selectables = {
                 selectionEventEmitter.emit('hoverexit', newSelectableShape, eventPayload);
             };
 
+            newSelectableShape.click = function() {
+                selectionEventEmitter.emit('click', newSelectableShape, eventPayload);
+            };
+
             newSelectableShape.select = function() {
                 selectionEventEmitter.emit('select', newSelectableShape, eventPayload);
             };
@@ -109,9 +113,12 @@ var Selectables = {
                     }
                 }
                 if (currentMouseDown !== null) {
-                    if ((currentMouseDown === currentHovered) && (currentSelected !== currentMouseDown)) {
-                        currentSelected = currentMouseDown;
-                        currentSelected.select();
+                    if (currentMouseDown === currentHovered) {
+                        currentHovered.click();
+                        if (currentSelected !== currentMouseDown) {
+                            currentSelected = currentMouseDown;
+                            currentSelected.select();
+                        }
                     }
                 }
                 currentMouseDown = null;
@@ -124,6 +131,10 @@ var Selectables = {
 
         singleSelectionManager.onHoverExit = function(hoverExitHandler) {
             selectionEventEmitter.addListener('hoverexit', hoverExitHandler);
+        };
+
+        singleSelectionManager.onClick = function(selectHandler) {
+            selectionEventEmitter.addListener('click', selectHandler);
         };
 
         singleSelectionManager.onSelect = function(selectHandler) {

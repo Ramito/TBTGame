@@ -16,7 +16,7 @@ document.body.appendChild(renderer.domElement);
 //camera
 var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 camera.position.x = 0;
-camera.position.y = 350;
+camera.position.y = 550;
 camera.position.z = 0;
 camera.lookAt(new THREE.Vector3(500, 0, 500));
 
@@ -44,9 +44,14 @@ scene.add(pointLight);
 
 var grid = Grid.makeGrid(20, 16);
 
+var random = new Random(Random.engines.mt19937().autoSeed());
 var heightPropertyName = 'height';
 grid.addGridProperty(heightPropertyName);
-grid.setGridPropertyValue(heightPropertyName, grid.getCell(7, 3), 4);
+for (var i = 0; i < 50; ++i) {
+    var randomCell = random.integer(0, grid.columns * grid.rows);
+    var randomHeight = random.integer(0, 1) + random.integer(0, 2) + random.integer(0, 1);
+    grid.setGridPropertyValue(heightPropertyName, randomCell, randomHeight);
+}
 
 function render() {
     trace();
@@ -73,7 +78,6 @@ var entityFactory = makeGameEntityFactory();
 var gameEntityCollection = [];
 
 var gameEntities = 20;
-var random = new Random(Random.engines.mt19937().autoSeed());
 
 for (var i = 0; i < gameEntities; ++i) {
     var gameEntity = entityFactory.makeGameEntity();
